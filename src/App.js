@@ -1,26 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
+import { DragDropContext } from 'react-beautiful-dnd';
 import './assets/main.css';
+import List from './components/List'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component {
+  state = {
+    lists: [
+      {
+        id: 1,
+        title: 'To do',
+        tasks: [
+          {
+            id: 1,
+            title: 'Build app'
+          },
+
+          {
+            id: 2,
+            title: 'Build frontend'
+          }
+        ]
+      },
+
+      {
+        id: 2,
+        title: 'Adhoc',
+        tasks: []
+      }
+    ]
+  }
+
+  onDragEnd = result => {
+
+  }
+
+  render() {
+    return (
+      <div className="App bg-gray-400 flex px-2">
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          {this.state.lists.map((list, index) => {
+            return <List key={index} list={list} />
+          })}
+        </DragDropContext>
+      </div>
+    );
+  }
 }
-
-export default App;
