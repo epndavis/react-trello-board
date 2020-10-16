@@ -2,26 +2,26 @@ import React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Task from './Task';
 
-export default class List extends React.Component {
+export default class Board extends React.Component {
     addTask = (result) => {
-        this.props.addTask(this.props.list)
+        this.props.addTask(this.props.board)
     }
 
     render () {
         return <div className="flex py-4 px-2">
             <div className="p-4 bg-white rounded shadow w-64 flex flex-col">
                 <h2 className="text-lg font-bold">    
-                    {this.props.list.title}
+                    {this.props.board.title}
                 </h2>
 
-                <Droppable droppableId={this.props.list.title}>
+                <Droppable droppableId={this.props.board.id.toString()}>
                     {(provided) => {
                         return <div 
                             className="mt-4 flex-1"
                             ref={provided.innerRef}
                             {...provided.droppableProps}   
                         >
-                            {this.props.list.tasks.map((task, index) => {
+                            {this.props.board.tasks.map((task, index) => {
                                 return <Task key={task.id} task={task} index={index} />
                             })}
                             {provided.placeholder}
