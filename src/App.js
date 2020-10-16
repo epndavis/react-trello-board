@@ -21,12 +21,13 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = Object.assign({
+    this.state = {
       showBoardModal: false,
       showTaskModal: false,
       selectedBoard: {},
       selectedTask: {},
-    }, InitialState)
+      store: InitialState
+    }
 
     this.openBoardModal = this.openBoardModal.bind(this);
     this.closeBoardModal = this.closeBoardModal.bind(this);
@@ -40,8 +41,8 @@ export default class App extends React.Component {
       return
     }
     
-    const fromBoard = this.state.boards.find((board) => source.droppableId === board.id.toString())
-    const toBoard = this.state.boards.find((board) => destination.droppableId === board.id.toString())
+    const fromBoard = this.state.store.boards.find((board) => source.droppableId === board.id.toString())
+    const toBoard = this.state.store.boards.find((board) => destination.droppableId === board.id.toString())
     const draggedTask = fromBoard.tasks.find((task) => task.id.toString() === draggableId);
 
     if (fromBoard.id === toBoard.id) {
@@ -99,34 +100,48 @@ export default class App extends React.Component {
   }
 
   updateBoards = (toBoard, fromBoard) => {
-    const toBoardIndex = this.state.boards.findIndex((filteredBoard) => filteredBoard.id === toBoard.id)
+    const toBoardIndex = this.state.store.boards.findIndex((filteredBoard) => filteredBoard.id === toBoard.id)
 
-    let newBoards = [...this.state.boards]
+    let newBoards = [...this.state.store.boards]
     newBoards[toBoardIndex] = toBoard
 
     if (fromBoard) {
-      const fromBoardIndex = this.state.boards.findIndex((filteredBoard) => filteredBoard.id === fromBoard.id)
+      const fromBoardIndex = this.state.store.boards.findIndex((filteredBoard) => filteredBoard.id === fromBoard.id)
       newBoards[fromBoardIndex] = fromBoard
+    }
+
+    const store = {
+      ...this.state.store,
+      boards: newBoards
     }
 
     this.setState({
       ...this.state,
-      boards: newBoards
+      store
+    }, () => {
+      localStorage.setItem('store', JSON.stringify(store))
     })
   }
 
   makeBoard = ({ value }) => {
     this.setState((state) => {
-      const index = state.boardsIndex++
-      const boards = [...state.boards, Object.assign(boardMap, {
+      const index = state.store.boardsIndex++
+      const boards = [...state.store.boards, Object.assign(boardMap, {
         id: index,
         title: value
       })]
 
-      return {
-        ...this.state,
+      const store = {
+        ...this.state.store,
         boardsIndex: index,
         boards
+      }
+
+      localStorage.setItem('store', JSON.stringify(store))
+
+      return {
+        ...this.state,
+        store
       }
     })
   }
@@ -202,7 +217,7 @@ export default class App extends React.Component {
  
         <div className="flex-1 flex">
           <DragDropContext onDragEnd={this.onDragEnd}>
-            {this.state.boards.map((board, index) => {
+            {this.state.store.boards.map((board, index) => {
               return <Board key={index} board={board} addTask={this.openTaskModal}/>
             })}
           </DragDropContext>

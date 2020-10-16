@@ -1,29 +1,7 @@
-export default {
-    boardsIndex: 2,
-    tasksIndex: 2,
-    boards: [
-      {
-        id: 1,
-        title: 'To do',
-        tasks: [
-          {
-            id: 1,
-            title: 'Build app',
-            comments: []
-          },
+const store = localStorage.getItem('store')
 
-          {
-            id: 2,
-            title: 'Build frontend',
-            comments: []
-          }
-        ]
-      },
-
-      {
-        id: 2,
-        title: 'Adhoc',
-        tasks: []
-      }
-    ]
-}
+export default Object.assign({
+    boardsIndex: 0,
+    tasksIndex: 0,
+    boards: []
+}, JSON.parse(store) ?? {})
