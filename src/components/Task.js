@@ -2,6 +2,10 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 export default class Task extends React.Component {
+    editTask = () => {
+        this.props.editTask(this.props.task)
+    }
+
     render () {
         return (
             <Draggable draggableId={this.props.task.id.toString()} index={this.props.index}>
@@ -16,8 +20,10 @@ export default class Task extends React.Component {
                             {this.props.task.title}
                         </h2>
 
+                        <button onClick={this.editTask}>Edit</button>
+
                         <p className="text-sm">
-                            This is a task
+                            {this.props.task.description}
                         </p>
                     </div>
                 }}

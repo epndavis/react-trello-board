@@ -3,8 +3,8 @@ import { Droppable } from 'react-beautiful-dnd';
 import Task from './Task';
 
 export default class Board extends React.Component {
-    addTask = (result) => {
-        this.props.addTask(this.props.board)
+    addTask = (task = {}) => {
+        this.props.addTask(this.props.board, task)
     }
 
     render () {
@@ -22,7 +22,7 @@ export default class Board extends React.Component {
                             {...provided.droppableProps}   
                         >
                             {this.props.board.tasks.map((task, index) => {
-                                return <Task key={task.id} task={task} index={index} />
+                                return <Task key={task.id} task={task} index={index} editTask={this.addTask}/>
                             })}
                             {provided.placeholder}
                         </div>

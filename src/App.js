@@ -22,8 +22,10 @@ export default class App extends React.Component {
     super(props)
 
     this.state = Object.assign({
-      addingBoard: false,
-      addingTask: false,
+      showBoardModal: false,
+      showTaskModal: false,
+      selectedBoard: {},
+      selectedTask: {},
     }, InitialState)
 
     this.openBoardModal = this.openBoardModal.bind(this);
@@ -88,6 +90,15 @@ export default class App extends React.Component {
     }
   }
 
+  updateTaskOnBoard = (board, editedTask) => {
+    const taskIndex = board.tasks.findIndex((task) => task.id === editedTask.id)
+    const updatedBoard = Object.assign(board, {})
+
+    updatedBoard.tasks[taskIndex] = editedTask
+
+    return updatedBoard
+  }
+
   updateBoards = (toBoard, fromBoard) => {
     const toBoardIndex = this.state.boards.findIndex((filteredBoard) => filteredBoard.id === toBoard.id)
 
@@ -121,42 +132,67 @@ export default class App extends React.Component {
     })
   }
 
-  makeTask = ({ title, description }, board) => {
+  makeTask = (task) => {
+    if (task.id) {
+      return this.updateTask(task)
+    }
+
     const index = this.state.tasksIndex + 1
-    const updateToBoard = this.addTaskToBoard(board, Object.assign(taskMap, {
+    const updateToBoard = this.addTaskToBoard(this.state.selectedBoard, Object.assign(taskMap, {
       id: index,
-      title,
-      description
+      title: task.title,
+      description: task.description
     }))
 
-    this.updateBoards(updateToBoard)
+    this.setState({
+      tasksIndex: index
+    }, this.updateBoards(updateToBoard))
+
+    this.closeTaskModal()
   }
 
-  openTaskModal(result) {
+  updateTask = (task) => {
+    const updatedTask = Object.assign(this.state.selectedTask, task)
+    const updateToBoard = this.updateTaskOnBoard(this.state.selectedBoard, updatedTask)
+
+    this.updateBoards(updateToBoard)
+    this.closeTaskModal()
+  }
+
+  openTaskModal (board, task = {}) {
     this.setState((state) => ({
-      addingTask: true
+      showTaskModal: true,
+      selectedBoard: board,
+      selectedTask: task
     }))
   }
 
   closeTaskModal() {
     this.setState((state) => ({
-      addingTask: false
+      showTaskModal: false
     }))
   }
 
   openBoardModal() {
     this.setState((state) => ({
-      addingBoard: true
+      showBoardModal: true
     }))
   }
 
   closeBoardModal() {
     this.setState((state) => ({
-      addingBoard: false
+      showBoardModal: false
     }))
   }
 
   render() {
+    let taskModal;
+
+    if (this.state.showTaskModal) {
+      taskModal = <TaskModal show={this.state.showTaskModal} task={this.state.selectedTask} onSubmit={this.makeTask} onClose={this.closeTaskModal} />
+    }
+
+
     return (
       <div className="App bg-gray-400 flex flex-col px-2 h-screen overflow-y-hidden">
         <header className="px-2 py-1 w-full">
@@ -173,9 +209,9 @@ export default class App extends React.Component {
           </DragDropContext>
         </div>
 
-        <BoardModal show={this.state.addingBoard} onSubmit={this.makeBoard} onClose={this.closeBoardModal} />
+        <BoardModal show={this.state.showBoardModal} onSubmit={this.makeBoard} onClose={this.closeBoardModal} />
 
-        <TaskModal show={this.state.addingTask} onSubmit={this.makeTask} onClose={this.closeTaskModal} />
+        {taskModal}
       </div>
     );
   }
