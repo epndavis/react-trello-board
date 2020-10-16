@@ -152,7 +152,7 @@ export default class App extends React.Component {
       return this.updateTask(task)
     }
 
-    const index = this.state.tasksIndex + 1
+    const index = this.state.store.tasksIndex + 1
     const updateToBoard = this.addTaskToBoard(this.state.selectedBoard, Object.assign(taskMap, {
       id: index,
       title: task.title,
