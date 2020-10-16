@@ -114,7 +114,7 @@ export default class App extends React.Component {
       ...this.state.store,
       boards: newBoards
     }
-
+ 
     this.setState({
       ...this.state,
       store
@@ -159,9 +159,16 @@ export default class App extends React.Component {
       description: task.description
     }))
 
-    this.setState({
+    const store = {
+      ...this.state.store,
       tasksIndex: index
-    }, this.updateBoards(updateToBoard))
+    }
+
+    this.setState({
+      store
+    }, () => {
+      this.updateBoards(updateToBoard)
+    })
 
     this.closeTaskModal()
   }
