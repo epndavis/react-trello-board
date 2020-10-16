@@ -1,5 +1,6 @@
 import React from 'react'
 import Modal from './Modal'
+import Comments from './Comments'
 
 export default class TaskModal extends React.Component {
     constructor(props) {
@@ -7,7 +8,8 @@ export default class TaskModal extends React.Component {
 
         this.state = Object.assign({
             title: '',
-            description: ''
+            description: '',
+            comments: []
         }, this.props.task)
     }
 
@@ -20,6 +22,17 @@ export default class TaskModal extends React.Component {
         this.props.onSubmit(this.state)
     }
 
+    addComment = (comment) => {
+        const comments = this.state.comments
+
+        comments.push(comment)
+
+        this.setState({
+            ...this.state,
+            comments
+        })
+    }
+
     render () {
         return <Modal show={this.props.show} onClose={this.props.onClose}>
             <div className="w-64 shadow rounded bg-white p-4 w-full max-w-xl h-full relative flex flex-col">
@@ -29,12 +42,12 @@ export default class TaskModal extends React.Component {
                     </h2>
                     
                     <div className="mt-4">
-                        <textarea rows="10" name="description" className="w-full focus:bg-gray-200" placeholder="Add task description..." value={this.state.description} onChange={this.handleOnChange}></textarea>
+                        <textarea rows="5" name="description" className="w-full focus:bg-gray-200" placeholder="Add task description..." value={this.state.description} onChange={this.handleOnChange}></textarea>
                     </div>
                 </div>
 
-                <div className="flex-1">
-                    {/* TODO comments */}
+                <div className="flex-1 overflow-y-scroll">
+                    <Comments comments={this.state.comments} addComment={this.addComment}/>
                 </div>
 
                 <div className="mt-4">

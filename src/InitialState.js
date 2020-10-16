@@ -8,12 +8,14 @@ export default {
         tasks: [
           {
             id: 1,
-            title: 'Build app'
+            title: 'Build app',
+            comments: []
           },
 
           {
             id: 2,
-            title: 'Build frontend'
+            title: 'Build frontend',
+            comments: []
           }
         ]
       },

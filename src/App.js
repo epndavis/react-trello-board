@@ -81,7 +81,6 @@ export default class App extends React.Component {
 
   addTaskToBoard = (board, task, destinationIndex) => {
     let newTasks = Array.from(board.tasks)
-
     newTasks.splice(destinationIndex, 0, task)
 
     return {
@@ -133,6 +132,7 @@ export default class App extends React.Component {
   }
 
   makeTask = (task) => {
+    // TODO when a new task is added it overwrites the old one, need to find the reference
     if (task.id) {
       return this.updateTask(task)
     }
