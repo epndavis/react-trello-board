@@ -192,7 +192,6 @@ export default class App extends React.Component {
       taskModal = <TaskModal show={this.state.showTaskModal} task={this.state.selectedTask} onSubmit={this.makeTask} onClose={this.closeTaskModal} />
     }
 
-
     return (
       <div className="App bg-gray-400 flex flex-col px-2 h-screen overflow-y-hidden">
         <header className="px-2 py-1 w-full">
